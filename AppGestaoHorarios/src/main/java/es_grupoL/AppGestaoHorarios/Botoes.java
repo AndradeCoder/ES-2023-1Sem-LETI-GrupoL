@@ -8,6 +8,11 @@ import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.io.File;
 import javax.swing.JFileChooser;
+import java.awt.Desktop;
+import java.awt.event.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import javax.swing.*; 
 
 public class Botoes extends JFrame {
 
@@ -40,7 +45,13 @@ public class Botoes extends JFrame {
 		websiteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("funciona");
+				Desktop desk = Desktop.getDesktop();
+				String filepath = System.getProperty("user.dir") + "/SalasDeAulaPorTiposDeSala.html";
+				filepath = filepath.replace("\\","/");
+				try {
+					desk.browse(new java.net.URI("file://" + filepath));
+				} catch (IOException | URISyntaxException e1) {e1.printStackTrace();}
+				System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			}
 		});
 
@@ -53,7 +64,7 @@ public class Botoes extends JFrame {
 		setVisible(true);
 	}
 
-//    public static void main(String[] args) {
-//        new Botoes();
-//    }
+    public static void main(String[] args) {
+        new Botoes();
+    }
 }
