@@ -17,7 +17,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JCheckBox;
 import javax.swing.ButtonGroup;
 import org.apache.commons.io.FileUtils;
-
+import java.awt.Desktop;
+import java.net.URISyntaxException; 
 
 public class Botoes extends JFrame {
 
@@ -81,7 +82,13 @@ public class Botoes extends JFrame {
 		websiteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("funciona");
+				Desktop desk = Desktop.getDesktop();
+				String filepath = System.getProperty("user.dir") + "/SalasDeAulaPorTiposDeSala.html";
+				filepath = filepath.replace("\\","/");
+				try {
+					desk.browse(new java.net.URI("file://" + filepath));
+				} catch (IOException | URISyntaxException e1) {e1.printStackTrace();}
+				System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			}
 		});
 
@@ -99,10 +106,6 @@ public class Botoes extends JFrame {
 		setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		new Botoes();
-	}
-
 	public void carregaFicheiroRemoto() {
 
 		String url = this.getUrlRemoto().getText();
@@ -118,4 +121,7 @@ public class Botoes extends JFrame {
 			System.out.println("Este ficheiro remoto não é do tipo .csv");
 		}
 	}
+  public static void main(String[] args) {
+        new Botoes();
+  }
 }
