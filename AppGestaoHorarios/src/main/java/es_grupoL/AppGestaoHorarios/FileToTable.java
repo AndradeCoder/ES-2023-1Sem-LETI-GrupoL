@@ -149,8 +149,9 @@ public class FileToTable {
 		FileToTable a = new FileToTable(file);
 		FileToTable b = new FileToTable(file);
 		ftt.readCSV(); // Teste temporário e este caminho só funciona no meu pc como é óbvio
-		Map<Integer, ArrayList<String>> map = a.readCSV(); // Teste temporário e este caminho só funciona no meu pc como é óbvio
-		
+		Map<Integer, ArrayList<String>> map = a.readCSV(); // Teste temporário e este caminho só funciona no meu pc como
+															// é óbvio
+
 		createHTML(map);
 		for (String s : map.get(1))
 			System.out.println(s);
