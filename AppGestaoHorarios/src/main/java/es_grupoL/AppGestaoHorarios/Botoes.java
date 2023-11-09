@@ -53,7 +53,7 @@ public class Botoes extends JFrame {
 		setVisible(true);
 	}
 
-//    public static void main(String[] args) {
-//        new Botoes();
-//    }
+	public static void main(String[] args) {
+		new Botoes();
+	}
 }
