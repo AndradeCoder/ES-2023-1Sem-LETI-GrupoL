@@ -13,21 +13,30 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+/**
+ * The `FileToTable` class is responsible for reading data from a CSV file and generating an HTML representation of the data for visualization.
+ */
 public class FileToTable {
 
-	private boolean autoMapped = false;
+	private boolean columnsMapped = false;
 	private File file;
-	private List<String> header = new ArrayList<String>();
+	private List<String> mappedHeader = new ArrayList<>();
 
+	/**
+     * Constructs a `FileToTable` object for processing a given CSV file.
+     *
+     * @param file The CSV file to be processed.
+     */
 	public FileToTable(File file) {
 		this.file = file;
 	}
 
-	/*
-	 * Devolve o ficheiro no formato de um HashMap, que contem uma chave para o
-	 * numero de linha e uma lista com as colunas da linha como valor
-	 */
-
+	
+	/**
+     * Reads the CSV file and converts it into a `Map` containing rows of data.
+     *
+     * @return A `Map` where the key is the row number and the value is a list of column values.
+     */
 	public Map<Integer, ArrayList<String>> readCSV() {
 		Map<Integer, ArrayList<String>> fileLineInfo = new HashMap<>();
 
@@ -44,28 +53,31 @@ public class FileToTable {
 			e.printStackTrace();
 			return null;
 		}
-		// System.out.println(file);
 		return fileLineInfo;
 	}
 
-	public static void createHTML(Map<Integer, ArrayList<String>> data) {
+	/**
+     * Creates an HTML representation of the data for visualization using JavaScript.
+     *
+     * @param data A `Map` containing data rows to be converted into an HTML table.
+     */
+	public void createHTML(Map<Integer, ArrayList<String>> data) {
+		System.out.println("VER ISTO "+mappedHeader);
 		StringBuilder jsCode = new StringBuilder();
 		jsCode.append("<script type=\"text/javascript\">\n\n");
 		jsCode.append("var tabledata = [");
 
 		// Iterar pelos dados do mapa e preencher o array JavaScript
 		for (Map.Entry<Integer, ArrayList<String>> entry : data.entrySet()) {
-			int key = entry.getKey();
 			List<String> rowData = entry.getValue();
-			List<ColunasHorario> rowDataColumnName = ColunasHorario.constantsList();
 			int column = 0;
 
-			jsCode.append("{");
-			for (ColunasHorario ch : rowDataColumnName) {
+			jsCode.append("{");  
+			for (String fieldName : this.mappedHeader) {
 				if (column == rowData.size() - 1)
-					jsCode.append(ch + ":\"" + rowData.get(column) + "\"},\n"); // Ultima coluna
+					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\"},\n"); // Ultima coluna
 				else {
-					jsCode.append(ch + ":\"" + rowData.get(column) + "\","); // Resto das colunas
+					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\","); // Resto das colunas
 					column++;
 				}
 			}
@@ -76,7 +88,7 @@ public class FileToTable {
 			jsCode.deleteCharAt(jsCode.length() - 1);
 		}
 
-		jsCode.append("];\n");
+		jsCode.append("];\n\n");
 		jsCode.append("var table = new Tabulator(\"#example-table\", {\n");
 		jsCode.append("data:tabledata,\n");
 		jsCode.append("layout:\"fitDatafill\",\n");
@@ -88,10 +100,9 @@ public class FileToTable {
 		jsCode.append("initialSort: [{column:\"building\",dir:\"asc\"},],\n");
 		jsCode.append("columns: [\n");
 
-		List<ColunasHorario> colunasHorario = ColunasHorario.constantsList();
-		for (ColunasHorario ch : colunasHorario)
+		for (String column : this.mappedHeader)
 			jsCode.append(
-					"{ title: \"" + ch.getColumnName() + "\", field: \"" + ch + "\", headerFilter: \"input\" },\n");
+					"{ title: \"" + column + "\", field: \"" + ColunasHorario.getConstant(column) + "\", headerFilter: \"input\" },\n");
 
 		jsCode.append("]\n");
 		jsCode.append("});\n");
@@ -112,13 +123,18 @@ public class FileToTable {
 		}
 	}
 
+	/**
+     * Checks if the CSV file has a header containing expected column names.
+     *
+     * @return `true` if a matching header is found, `false` otherwise.
+     */
 	private boolean hasHeader() {
 		List<String> colunasHorario = ColunasHorario.valuesList();
 		try (CSVParser parser = CSVParser.parse(new FileReader(file), CSVFormat.EXCEL.withDelimiter(';'))) {
 			for (CSVRecord record : parser)
 				if (record.toList().containsAll(colunasHorario)) {
-					this.setAutoMapped(true);
-					this.setHeader(record.toList());
+					setColumnsMapped(true);
+					setMappedHeader(record.toList());
 					return true;
 				}
 		} catch (Exception e) {
@@ -127,22 +143,47 @@ public class FileToTable {
 		return false;
 	}
 
-	public boolean isAutoMapped() {
-		return autoMapped;
-	}
+	/**
+     * Checks if the CSV columns are automatically mapped.
+     *
+     * @return `true` if columns are automatically mapped, `false` otherwise.
+     */
+    public boolean isColumnsMapped() {
+        return columnsMapped;
+    }
 
-	public void setAutoMapped(boolean autoMapped) {
-		this.autoMapped = autoMapped;
-	}
+    /**
+     * Sets whether the CSV columns are automatically mapped.
+     *
+     * @param autoMapped `true` to indicate automatic mapping, `false` otherwise.
+     */
+    public void setColumnsMapped(boolean autoMapped) {
+        this.columnsMapped = autoMapped;
+    }
 
-	public List<String> getHeader() {
-		return header;
-	}
+    /**
+     * Gets the header data extracted from the CSV file.
+     *
+     * @return A list of header column names. List will be empty if the file has no header.
+     */
+    public List<String> getMappedHeader() {
+        return mappedHeader;
+    }
 
-	public void setHeader(List<String> header) {
-		this.header = header;
-	}
+    /**
+     * Sets the header data extracted from the CSV file.
+     *
+     * @param header A list of header column names.
+     */
+    public void setMappedHeader(List<String> header) {
+        this.mappedHeader = header;
+    }
 
+    /**
+     * The main method for testing `FileToTable` class functionality.
+     *
+     * @param args The command-line arguments.
+     */
 	public static void main(String[] args) {
 		File file = new File("C:\\Users\\leoth\\Downloads\\HorarioDeExemplo.csv");
 		FileToTable ftt = new FileToTable(file);
@@ -152,12 +193,12 @@ public class FileToTable {
 		Map<Integer, ArrayList<String>> map = a.readCSV(); // Teste temporário e este caminho só funciona no meu pc como
 															// é óbvio
 
-		createHTML(map);
+		ftt.createHTML(map);
 		for (String s : map.get(1))
 			System.out.println(s);
-		System.out.println(ftt.getHeader());
-		System.out.println("AutoMapped: " + ftt.isAutoMapped());
-		System.out.println("AutoMapped: " + b.isAutoMapped());
-		System.out.println("AutoMapped: " + a.isAutoMapped());
+		System.out.println(ftt.getMappedHeader());
+		System.out.println("AutoMapped: " + ftt.isColumnsMapped());
+		System.out.println("AutoMapped: " + b.isColumnsMapped());
+		System.out.println("AutoMapped: " + a.isColumnsMapped());
 	}
 }

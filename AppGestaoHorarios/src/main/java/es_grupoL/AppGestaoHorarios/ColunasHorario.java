@@ -10,8 +10,7 @@ public enum ColunasHorario {
 	CaracteristicasDaSalaPedidaParaAAula("Características da sala pedida para a aula"),
 	SalaAtribuídaÀAula("Sala atribuída à aula");
 
-	private final String columnName; // Não faz diferença ser final aqui, apenas serve para indicar que não se deve
-										// mudar
+	private final String columnName; // Não faz diferença ser final aqui, apenas serve para indicar que não se deve mudar
 
 	ColunasHorario(String columnName) {
 		this.columnName = columnName;
@@ -21,7 +20,15 @@ public enum ColunasHorario {
 		return columnName;
 	}
 
-	public static List<ColunasHorario> constantsList(){
+	public static ColunasHorario getConstant(String columnName) {
+		for (ColunasHorario coluna : values()) {
+			if (coluna.getColumnName().equals(columnName))
+				return coluna;
+		}
+		throw new IllegalArgumentException("No enum constant with columnName: " + columnName);
+	}
+
+	public static List<ColunasHorario> constantsList() {
 		List<ColunasHorario> columnsList = new ArrayList<>();
 		ColunasHorario[] columnsArray = ColunasHorario.values();
 
