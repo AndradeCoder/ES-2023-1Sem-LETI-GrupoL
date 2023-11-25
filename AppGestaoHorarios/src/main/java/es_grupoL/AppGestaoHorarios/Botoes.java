@@ -26,21 +26,48 @@ public class Botoes extends JFrame {
 	private JTextField urlRemoto; // URL remoto a ser inserido pelo utilizador, para ficheiros remotos
 	private String filePath; // Guardar o caminho do ficheiro para usar nas funções da classe FileToTable
 	private List<String> mappedColumnsInOrder = new ArrayList<>(); // Lista ordenada dos campos mapeados. Ex: mappedColumnsInOrder.get(0) = coluna 1
-	private FileToTable ftt;
-	private Map<Integer, ArrayList<String>> map;
+	private FileToTable userFileToTable;	// Ficheiro do horário
+	private FileToTable classroomsFileToTable = new FileToTable(new File("CaracterizaçãoDasSalas.csv"));	// Ficheiro das salas
+	private Map<Integer, ArrayList<String>> userFileMap;
+	private Map<Integer, ArrayList<String>> classroomsFileMap = classroomsFileToTable.readCSV();
 
 	/**
 	 * Constructs the main application window, initializes components, and sets up
 	 * event listeners.
 	 */
 	public Botoes() {
+		//System.out.println(classroomsFileMap.get(2));
+		
 		final JCheckBox checkBoxLocal = new JCheckBox("Ficheiro Local");
 		final JCheckBox checkBoxRemoto = new JCheckBox("Ficheiro remoto");
 		this.urlRemoto = new JTextField(20); 
 		this.urlRemoto.setToolTipText("Inserir o url do ficheiro remoto");
 		JButton fileButton = new JButton("Selecione o ficheiro local");
 		JButton websiteButton = new JButton("Abre Website");
+		JButton MappingButton = new JButton("Confirmar mapeamento");
+		JButton CancellingButton = new JButton("Cancelar mapeamento");
 		ButtonGroup checkBoxes = new ButtonGroup();
+		List<SelectButton> listOfSelects = SelectButton.listOfSelectButtons();
+
+		JPanel panel = new JPanel();
+		for (SelectButton selectButton : listOfSelects) {
+			panel.add(selectButton);
+			selectButton.setVisible(false);	// Só vão aparecer se for preciso fazer mapeamento manual 
+		}
+		
+		// Ações dos selects das colunas
+		for (SelectButton selectButton : listOfSelects) {
+			for (int i = 0; i < ColunasHorario.valuesList().size(); i++) {
+				int index = i;
+				selectButton.addOptionClickListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						selectButton.setText(ColunasHorario.valuesList().get(index));	// Nome da coluna selecionada
+						selectButton.setSelectedAtLeastOnce(true);	
+					}
+				}, index);
+			}
+		}
 
 		// Ações das checkboxes
 		checkBoxes.add(checkBoxLocal);
@@ -76,13 +103,18 @@ public class Botoes extends JFrame {
 
 				if (filePath != null) {
 					File file = new File(filePath);
-					ftt = new FileToTable(file);
-					map = ftt.readCSV();
+					userFileToTable = new FileToTable(file);
+					userFileMap = userFileToTable.readCSV();
 
-					if (ftt.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
+					if (userFileToTable.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
 						websiteButton.setVisible(true);
 					else {
-						
+							
+						for (SelectButton selectButton : listOfSelects) {	// Caso contrário tem de fazer o mapeamento manual
+							selectButton.setVisible(true);
+							MappingButton.setVisible(true);
+							CancellingButton.setVisible(true);
+						}
 					}
 				}
 			}
@@ -98,6 +130,53 @@ public class Botoes extends JFrame {
 				openWebsite();
 			}
 		});
+		
+		//Ações do botão de cancelar mapeamento
+		CancellingButton.setVisible(false);
+		CancellingButton.setBackground(Color.RED);
+		CancellingButton.setPreferredSize(new Dimension(CancellingButton.getPreferredSize().width, 50));
+		CancellingButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CancellingButton.setVisible(false);
+				MappingButton.setVisible(false);
+				websiteButton.setVisible(false);
+				for (int i = 0; i < listOfSelects.size(); i++) {
+				    SelectButton selectButton = listOfSelects.get(i);
+				    selectButton.setText((i + 1) + "ª Coluna");
+				    selectButton.setVisible(false);
+				    selectButton.setEnabled(true);
+				}
+
+				
+		}
+		});
+		
+		// Acões do butão de confirmar mapeamento
+		MappingButton.setVisible(false);
+		MappingButton.setBackground(Color.GREEN);
+		MappingButton.setPreferredSize(new Dimension(MappingButton.getPreferredSize().width, 50));
+		MappingButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(SelectButton.checkAllButtonsSelectedAtLeastOnce(listOfSelects)) {
+					MappingButton.setVisible(false);
+					websiteButton.setVisible(true);
+					for(SelectButton sb : listOfSelects)
+						sb.setEnabled(false);
+					
+					for (SelectButton selectButton : listOfSelects) {
+						mappedColumnsInOrder.add(selectButton.getText());
+					}
+					userFileToTable.setMappedHeader(mappedColumnsInOrder);
+					System.out.println(mappedColumnsInOrder);
+				} else {
+					System.out.println("Tem de selecionar todos os campos");
+				}
+			}
+		});
 
 		setLayout(new FlowLayout());
 		add(checkBoxLocal);
@@ -105,6 +184,9 @@ public class Botoes extends JFrame {
 		add(this.urlRemoto);
 		add(fileButton);
 		add(websiteButton);
+		add(panel);
+		add(MappingButton);
+		add(CancellingButton);
 
 		setTitle("JFrame");
 		setSize(15000, 350);
@@ -117,7 +199,7 @@ public class Botoes extends JFrame {
 	 * file.
 	 */
 	private void openWebsite() {	
-		this.ftt.createHTML(map);
+		this.userFileToTable.createHTML(userFileMap);
 		Desktop desk = Desktop.getDesktop();
 		String filepath = System.getProperty("user.dir") + "/ScheduleApp.html";
 		filepath = filepath.replace("\\", "/");
