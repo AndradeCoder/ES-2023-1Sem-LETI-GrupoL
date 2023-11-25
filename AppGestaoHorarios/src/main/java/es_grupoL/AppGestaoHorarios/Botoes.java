@@ -27,9 +27,7 @@ public class Botoes extends JFrame {
 	private String filePath; // Guardar o caminho do ficheiro para usar nas funções da classe FileToTable
 	private List<String> mappedColumnsInOrder = new ArrayList<>(); // Lista ordenada dos campos mapeados. Ex: mappedColumnsInOrder.get(0) = coluna 1
 	private FileToTable userFileToTable;	// Ficheiro do horário
-	private FileToTable classroomsFileToTable = new FileToTable(new File("CaracterizaçãoDasSalas.csv"));	// Ficheiro das salas
 	private Map<Integer, ArrayList<String>> userFileMap;
-	private Map<Integer, ArrayList<String>> classroomsFileMap = classroomsFileToTable.readCSV();
 
 	/**
 	 * Constructs the main application window, initializes components, and sets up
@@ -101,20 +99,19 @@ public class Botoes extends JFrame {
 					System.out.println("Selecione uma das opções para carregar o ficheiro");
 				}
 
-				if (filePath != null) {
+				if (filePath != null && !filePath.isBlank()) {
 					File file = new File(filePath);
 					userFileToTable = new FileToTable(file);
 					userFileMap = userFileToTable.readCSV();
 
 					if (userFileToTable.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
 						websiteButton.setVisible(true);
-					else {
-							
+					else {	
 						for (SelectButton selectButton : listOfSelects) {	// Caso contrário tem de fazer o mapeamento manual
 							selectButton.setVisible(true);
-							MappingButton.setVisible(true);
-							CancellingButton.setVisible(true);
 						}
+						MappingButton.setVisible(true);
+						CancellingButton.setVisible(true);
 					}
 				}
 			}
@@ -148,9 +145,8 @@ public class Botoes extends JFrame {
 				    selectButton.setVisible(false);
 				    selectButton.setEnabled(true);
 				}
-
-				
-		}
+				filePath = "";
+			}
 		});
 		
 		// Acões do butão de confirmar mapeamento
