@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Enum representing the columns in the schedule file. Each constant represents
+ * Enum representing the columns in the user inputed schedule file. Each constant represents
  * a specific column in the schedule data.
  * 
- * @version 1.0
+ * @version 1.3
  */
 public enum ColunasHorario {
 
@@ -39,9 +39,9 @@ public enum ColunasHorario {
 	 *
 	 * @return The name of the column.
 	 */
-	//	public String getColumnName() {
-	//		return columnName;
-	//	}
+	public String getColumnName() {
+		return columnName;
+	}
 
 	/**
 	 * Gets the enum constant associated with the specified column name.

@@ -17,7 +17,7 @@ import org.apache.commons.csv.CSVRecord;
  * The {@code FileToTable} class is responsible for reading data from a CSV file and
  * generating an HTML representation of the data for visualization
  * 
- * @version 1.0
+ * @version 1.2
  */
 public class FileToTable {
 
@@ -70,14 +70,14 @@ public class FileToTable {
 		System.out.println("VER ISTO "+mappedHeader);
 		StringBuilder jsCode = new StringBuilder();
 		jsCode.append("<script type=\"text/javascript\">\n\n");
-		jsCode.append("var tabledata = [");
+		jsCode.append("\tvar tabledata = [");
 
 		// Iterar pelos dados do mapa e preencher o array JavaScript
 		for (Map.Entry<Integer, ArrayList<String>> entry : data.entrySet()) {
 			List<String> rowData = entry.getValue();
 			int column = 0;
 
-			jsCode.append("{");  
+			jsCode.append("\t{");  
 			for (String fieldName : this.mappedHeader) {
 				if (column == rowData.size() - 1)
 					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\"},\n"); // Ultima coluna
@@ -116,88 +116,28 @@ public class FileToTable {
 		// Escrever o código JavaScript gerado para um ficheiro HTML
 		try (FileWriter writer = new FileWriter("ScheduleApp.html")) {
 			writer.write("<!DOCTYPE html>\n<html lang=\"en\">\n");
-			writer.write("<head>\r\n" + "<meta charset=\"utf-8\" />\r\n"
-					+ "		<link href=\"https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css\" rel=\"stylesheet\">\r\n"
-					+ "		<script type=\"text/javascript\" src=\"https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js\"></script>\r\n"
+			writer.write("<head>\n" + "<meta charset=\"utf-8\" />\n"
+					+ "		<link href=\"https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css\" rel=\"stylesheet\">\n"
+					+ "		<script type=\"text/javascript\" src=\"https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js\"></script>\n"
 					+ "	</head>");
-			writer.write("\n<body>\n\r" + "<H1>Horário</H1>	\r\n" + "<div>\r\n"
-					+ "    <select id=\"select-campo\">\r\n"
-					+ "    	<option value=\"InscritosNoTurno\">Inscritos no turno</option>\r\n"
-					+ "    	<option value=\"HoraInicioDaAula\">Hora inicio da aula</option>\r\n"
-					+ "    	<option value=\"HoraFimDaAula\">Hora fim da aula</option>\r\n"
-					+ "    	<option value=\"SalaAtribuídaÀAula\">Sala atribuida</option>\r\n"
-					+ "    	<option value=\"UnidadeCurricular\">Unidade curricular</option>\r\n"
-					+ "    	<option value=\"Curso\">Curso</option>\r\n"
-					+ "    	<option value=\"Turno\">Turno</option>\r\n"
-					+ "    	<option value=\"Turma\">Turma</option>\r\n"
-					+ "    	<option value=\"DiaDaSemana\">Dia da semana</option>\r\n"
-					+ "    	<option value=\"DataDaAula\">Data da aula</option>\r\n"
-					+ "    	<option value=\"InscritosNoTurno\">Inscritos no turno</option>\r\n"
-					+ "    	<option value=\"CaracteristicasDaSalaPedidaParaAAula\">Características da sala pedida para a aula</option>\r\n"
-					+ "		<option value=\"Edificio\">Edifício</option>\r\n"
-			    	+ "		<option value=\"CapacidadeNormal\">Capacidade normal</option>\r\n"
-			    	+ "		<option value=\"CapacidadeExame\">Capacidade exame</option>\r\n"
-			    	+ "		<option value=\"NumCaracteristicas\">Nº características</option>\r\n"
-			    	+ "		<option value=\"AnfiteatroAulas\">Anfiteatro aulas</option>\r\n"
-			    	+ "		<option value=\"ApoioTecnicoEventos\">Apoio técnico eventos</option>\r\n"
-			    	+ "		<option value=\"Arq1\">Arq 1</option>\r\n"
-			    	+ "		<option value=\"Arq2\">Arq 2</option>\r\n"
-			    	+ "		<option value=\"Arq3\">Arq 3</option>\r\n"
-			    	+ "		<option value=\"Arq4\">Arq 4</option>\r\n"
-			    	+ "		<option value=\"Arq5\">Arq 5</option>\r\n"
-			    	+ "		<option value=\"Arq6\">Arq 6</option>\r\n"
-			    	+ "		<option value=\"Arq9\">Arq 9</option>\r\n"
-			    	+ "		<option value=\"BYOD\">Bring Your Own Device</option>\r\n"
-			    	+ "		<option value=\"FocusGroup\">Focus Group</option>\r\n"
-			    	+ "		<option value=\"HorarioSalaVisivelPortalPublico\">Horário sala visível portal público</option>\r\n"
-			    	+ "		<option value=\"LaboratorioArquiteturaComputadoresI\">Laboratório de Arquitectura de Computadores I</option>\r\n"
-			    	+ "		<option value=\"LaboratorioArquiteturaComputadoresII\">Laboratório de Arquitectura de Computadores II</option>\r\n"
-			    	+ "		<option value=\"LaboratorioBasesEngenharia\">Laboratório de Bases de Engenharia</option>\r\n"
-			    	+ "		<option value=\"LaboratorioEletronica\">Laboratório de Electrónica</option>\r\n"
-			    	+ "		<option value=\"LaboratorioInformatica\">Laboratório de Informática</option>\r\n"
-			    	+ "		<option value=\"LaboratorioJornalismo\">Laboratório de Jornalismo</option>\r\n"
-			    	+ "		<option value=\"LaboratorioRedesComputadoresI\">Laboratório de Redes de Computadores I</option>\r\n"
-			    	+ "		<option value=\"LaboratorioRedesComputadoresII\">Laboratório de Redes de Computadores II</option>\r\n"
-			    	+ "		<option value=\"LaboratorioTelecomunicacoes\">Laboratório de Telecomunicações</option>\r\n"
-			    	+ "		<option value=\"SalaAulasMestrado\">Sala Aulas Mestrado</option>\r\n"
-			    	+ "		<option value=\"SalaAulasMestradoPlus\">Sala Aulas Mestrado Plus</option>\r\n"
-			    	+ "		<option value=\"SalaNEE\">Sala NEE</option>\r\n"
-			    	+ "		<option value=\"SalaProvas\"> Sala Provas</option>\r\n"
-			    	+ "		<option value=\"SalaReuniao\">Sala Reunião</option>\r\n"
-			    	+ "		<option value=\"SalaArquitetura\">Sala de Arquitetura</option>\r\n"
-			    	+ "		<option value=\"SalaAulasNormal\">Sala de Aulas Normal</option>\r\n"
-			    	+ "		<option value=\"Videoconferencia\">videoconferência</option>\r\n"
-			    	+ "		<option value=\"Atrio\">Átrio</option>\r\n"
-					+ "  	</select>\r\n"
-					+ "\r\n"
-					+ "  	<select id=\"select-operador\">\r\n"
-					+ "		<option value=\"&\">&</option>\r\n"
-					+ "		<option value=\"+\">+</option>\r\n"
-					+ "		<option value=\"-\">-</option>\r\n"
-					+ "    	<option value=\"=\">=</option>\r\n"
-					+ "    	<option value=\"<\"><</option>\r\n"
-					+ "    	<option value=\"<=\"><=</option>\r\n"
-					+ "    	<option value=\">\">></option>\r\n"
-					+ "    	<option value=\">=\">>=</option>\r\n"
-					+ "    	<option value=\"!=\">!=</option>\r\n"
-					+ "    	<option value=\"like\">like</option>\r\n"
-					+ "  	</select>\r\n"
-					+ "\r\n"
-					+ "  	<input id=\"input-valor\" type=\"text\" placeholder=\"valor\">\r\n"
-					+ "  		\r\n"
-					+ "  	<button id=\"button-confirmar\">Confirmar</button>\r\n"
-					+ "  		\r\n"
-					+ "  	<button id=\"button-resultado\">Obter resultado</button>\r\n"
-					+ "\r\n"
-					+ "  	<button id=\"button-clear\">Clear Filter</button>\r\n"
-					+ "	</div>\r\n"
-					+ "\r\n"
-					+ "	<div id=\"resultado-obtido\">\r\n"
-					+ "  		<h2>Resultado</h2>\r\n"
-					+ "  		<div id=\"filter-result\">\r\n"
-					+ "    		<!-- Filter results will be displayed here -->\r\n"
-					+ "  		</div>\r\n"
-					+ "	</div>" + "		<div id=\"example-table\"></div>\n\n");
+			writer.write("\n<body>\n" + "<H1>Horário</H1>\n" + "<div>\n"
+					+ "    <select id=\"select-campo\">\n"
+					+ ScheduleMetrics.columnOptions()
+					+ "  	</select>\n\n"
+					+ "  	<select id=\"select-operador\">\n"
+					+ ScheduleMetrics.operatorOptions()
+					+ "  	</select>\n\n"
+					+ "  	<input id=\"input-valor\" type=\"text\" placeholder=\"valor\">\n\n"
+					+ "  	<button id=\"button-confirmar\">Confirmar</button>\n\n"
+					+ "  	<button id=\"button-resultado\">Obter resultado</button>\n\n"
+					+ "  	<button id=\"button-clear\">Clear Filter</button>\n"
+					+ "	</div>\n\n"
+					+ "	<div id=\"resultado-obtido\">\n"
+					+ "  		<h2>Resultado</h2>\n"
+					+ "  		<div id=\"filter-result\">\n"
+					+ "    		<!-- Resultados do filtro devem aparecer aqui -->\n"
+					+ "  		</div>\n"
+					+ "	</div>" + "\n<div id=\"example-table\"></div>\n\n");
 			writer.write(jsCode.toString());
 			writer.write("</body>\n</html>");
 		} catch (IOException e) {
