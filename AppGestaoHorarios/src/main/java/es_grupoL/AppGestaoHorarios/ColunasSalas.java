@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * The `ColunasSalas` enum represents the columns of a file containing information about classrooms.
- * It provides methods to retrieve information about classrooms based on specific criteria.
+ * Enum representing the columns of a file containing information about classrooms. It provides methods to retrieve information 
+ * about classrooms based on specific criteria. Each constant represents a specific column in the classrooms data.
+ * 
+ * @version 1.1
  */
 public enum ColunasSalas {
 
@@ -38,6 +40,30 @@ public enum ColunasSalas {
 	ColunasSalas(int index, String columnName) {
 		this.index = index;
 		this.columnName = columnName;
+	}
+
+	/**
+	 * Gets the name of the column.
+	 *
+	 * @return The name of the column.
+	 */
+	public String getColumnName() {
+		return columnName;
+	}
+
+	/**
+	 * Gets a list of all enum constants.
+	 *
+	 * @return A list of all enum constants.
+	 */
+	public static List<ColunasSalas> constantsList() {
+		List<ColunasSalas> columnsList = new ArrayList<>();
+		ColunasSalas[] columnsArray = ColunasSalas.values();
+
+		for (ColunasSalas value : columnsArray) {
+			columnsList.add(value);
+		}
+		return columnsList;
 	}
 
 	/**

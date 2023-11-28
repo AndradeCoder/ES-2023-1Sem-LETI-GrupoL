@@ -14,7 +14,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 /**
- * The `Botoes` class represents the main application window for schedule
+ * The {@code Botoes} class represents the main application window for schedule
  * management. It provides options for loading schedule data from local or
  * remote sources, visualizing the schedule in a web browser, and applying
  * filters. Users can load schedule data from either a local CSV file or a
@@ -22,7 +22,7 @@ import org.apache.commons.io.FileUtils;
  * in a web browser. Filters can be applied to the schedule data, and quality
  * analysis criteria can be defined by the user.
  * 
- * @version 1.0
+ * @version 1.5
  */
 public class Botoes extends JFrame {
 
@@ -34,12 +34,12 @@ public class Botoes extends JFrame {
 	private Map<Integer, ArrayList<String>> userFileMap;
 
 	public static Botoes getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Botoes();
-        }
-        return INSTANCE;
-    }
-	
+		if (INSTANCE == null) {
+			INSTANCE = new Botoes();
+		}
+		return INSTANCE;
+	}
+
 	/**
 	 * Constructs the main application window, initializes components, and sets up
 	 * event listeners.
