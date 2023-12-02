@@ -51,6 +51,26 @@ public enum ColunasSalas {
 		return columnName;
 	}
 
+	public static FileToTable getClassroomsFileToTable() {
+		return classroomsFileToTable;
+	}
+	
+	/**
+	 * Gets the enum constant associated with the specified column name.
+	 *
+	 * @param columnName The name of the column.
+	 * @return The enum constant associated with the specified column name.
+	 * @throws IllegalArgumentException if no enum constant is found with the
+	 *                                  specified column name.
+	 */
+	public static ColunasSalas getConstant(String columnName) {
+		for (ColunasSalas coluna : values()) {
+			if (coluna.columnName.equals(columnName))
+				return coluna;
+		}
+		throw new IllegalArgumentException("No enum constant with columnName: " + columnName);
+	}
+
 	/**
 	 * Gets a list of all enum constants.
 	 *
@@ -65,6 +85,22 @@ public enum ColunasSalas {
 		}
 		return columnsList;
 	}
+	
+	/**
+	 * Gets a list of values (names) of all enum constants.
+	 *
+	 * @return A list of values (names) of all enum constants.
+	 */
+	public static List<String> valuesList() {
+		List<String> columnsList = new ArrayList<>();
+		ColunasSalas[] columnsArray = ColunasSalas.values();
+
+		for (ColunasSalas value : columnsArray) {
+			columnsList.add(value.columnName);
+		}
+		return columnsList;
+	}
+
 
 	/**
 	 * Gets information from the classrooms file based on a specified column and its corresponding field value, 
