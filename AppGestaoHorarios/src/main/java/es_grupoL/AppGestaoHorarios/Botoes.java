@@ -96,6 +96,9 @@ public class Botoes extends JFrame {
 				} else if (checkBoxRemoto.isSelected()) {
 					selectRemoteFile();
 				} else {
+					String erroBoxes = "Tem de selecionar pelo menos uma das caixas";
+					JOptionPane.showMessageDialog(Botoes.this, erroBoxes, "Erro", JOptionPane.INFORMATION_MESSAGE);
+					
 					System.out.println("Selecione uma das opções para carregar o ficheiro");
 				}
 
@@ -172,6 +175,8 @@ public class Botoes extends JFrame {
 					userFileToTable.setMappedHeader(mappedColumnsInOrder);
 					System.out.println(mappedColumnsInOrder);
 				} else {
+					String erroCampos = "Tem de selecionar todos campos";
+					JOptionPane.showMessageDialog(Botoes.this, erroCampos, "Erro", JOptionPane.INFORMATION_MESSAGE);
 					System.out.println("Tem de selecionar todos os campos");
 				}
 			}
@@ -220,11 +225,14 @@ public class Botoes extends JFrame {
 
 		if (f == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fc.getSelectedFile();
-			filePath = selectedFile.getAbsolutePath();
-			if (filePath.toLowerCase().endsWith(".csv")) {
+			
+			if (selectedFile.getAbsolutePath().toLowerCase().endsWith(".csv")) {
+				filePath = selectedFile.getAbsolutePath();
 				System.out.println("Ficheiro CSV selecionado: " + filePath);
 			} else {
-				System.out.println("Por favor selecione um ficheiro .csv");
+				String erroFicheiro = "Por favor selecione um ficheiro .csv";
+				JOptionPane.showMessageDialog(Botoes.this, erroFicheiro, "Erro", JOptionPane.INFORMATION_MESSAGE);
+				System.out.println("Este ficheiro remoto não é do tipo .csv");
 			}
 		}
 	}
@@ -254,6 +262,8 @@ public class Botoes extends JFrame {
 				e.printStackTrace();
 			}
 		} else {
+			String erroFicheiro = "Por favor selecione um ficheiro .csv";
+			JOptionPane.showMessageDialog(Botoes.this, erroFicheiro, "Erro", JOptionPane.INFORMATION_MESSAGE);
 			System.out.println("Este ficheiro remoto não é do tipo .csv");
 		}
 		fi.deleteOnExit(); // Apagar ficheiro temporário
