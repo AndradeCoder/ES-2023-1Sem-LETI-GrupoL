@@ -1,41 +1,45 @@
 package es_grupoL.AppGestaoHorarios;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Properties;
 
 public class ConfigApp {
-	private static final String arquivo_configuracao = "config.properties";
-    private Properties propriedades;
-    
+    private static final String arquivoConfiguracao = "config.txt";
+    private String formatoDataHora;
+
     public ConfigApp() {
-        propriedades = new Properties();
         carregarConfiguracao();
     }
-    
+
     private void carregarConfiguracao() {
-        try (FileInputStream ac = new FileInputStream(arquivo_configuracao)) {
-            propriedades.load(ac);
+        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoConfiguracao))) {
+            // Lê a primeira linha do arquivo como formatoDataHora
+            formatoDataHora = leitor.readLine();
         } catch (IOException e) {
             System.err.println("Erro ao carregar o arquivo de configuração. Usando configurações padrão.");
+            formatoDataHora = "%Y-%m-%d %H:%M:%S";
         }
     }
-    
+
     public void salvarConfiguracao() {
-        try (FileOutputStream ac = new FileOutputStream(arquivo_configuracao)) {
-            propriedades.store(ac, null);
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivoConfiguracao))) {
+            // Escreve o formatoDataHora no arquivo
+            escritor.write(formatoDataHora);
         } catch (IOException e) {
             System.err.println("Erro ao salvar o arquivo de configuração.");
         }
     }
 
     public String getFormatoDataHora() {
-        return propriedades.getProperty("formatoDataHora", "%Y-%m-%d %H:%M:%S");
+        return formatoDataHora;
     }
 
     public void setFormatoDataHora(String formatoDataHora) {
-        propriedades.setProperty("formatoDataHora", formatoDataHora);
+        this.formatoDataHora = formatoDataHora;
+        salvarConfiguracao();
     }
 
     public static void main(String[] args) {

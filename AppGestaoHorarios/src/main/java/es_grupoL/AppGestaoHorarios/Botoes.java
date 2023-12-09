@@ -89,6 +89,7 @@ public class Botoes extends JFrame {
 		});
 
 		// Ações do botão Formato Data/Hora
+		btnFormatoDataHora.setVisible(false);
 		btnFormatoDataHora.setPreferredSize(new Dimension(200, 100));
 		btnFormatoDataHora.addActionListener(new ActionListener() {
             @Override
@@ -123,6 +124,7 @@ public class Botoes extends JFrame {
 					userFileToTable = new FileToTable(file);
 					userFileMap = userFileToTable.readCSV();
 					CancellingButton.setVisible(true);
+					btnFormatoDataHora.setVisible(true);
 
 					if (userFileToTable.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
 						websiteButton.setVisible(true);
