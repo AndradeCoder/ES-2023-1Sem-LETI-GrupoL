@@ -28,14 +28,17 @@ public class Botoes extends JFrame {
 	private List<String> mappedColumnsInOrder = new ArrayList<>(); // Lista ordenada dos campos mapeados. Ex: mappedColumnsInOrder.get(0) = coluna 1
 	private FileToTable userFileToTable;	// Ficheiro do horário
 	private Map<Integer, ArrayList<String>> userFileMap;
+	private ConfigApp configuracao_aplicacao;
 
 	/**
 	 * Constructs the main application window, initializes components, and sets up
 	 * event listeners.
 	 */
-	public Botoes() {
+	public Botoes(ConfigApp ca) {
+		this.configuracao_aplicacao = ca;
 		//System.out.println(classroomsFileMap.get(2));
 
+        JButton btnFormatoDataHora = new JButton("Formato Data/Hora");
 		final JCheckBox checkBoxLocal = new JCheckBox("Ficheiro Local");
 		final JCheckBox checkBoxRemoto = new JCheckBox("Ficheiro remoto");
 		this.urlRemoto = new JTextField(20); 
@@ -85,6 +88,19 @@ public class Botoes extends JFrame {
 			}
 		});
 
+		// Ações do botão Formato Data/Hora
+		btnFormatoDataHora.setPreferredSize(new Dimension(200, 100));
+		btnFormatoDataHora.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	//necessario alterar
+            	configuracao_aplicacao.setFormatoDataHora("%d/%m/%Y %H:%M:%S");
+            	
+            	configuracao_aplicacao.salvarConfiguracao();
+                System.out.println("Novo formato definido: " + configuracao_aplicacao.getFormatoDataHora());
+            }
+        });
+		
 		// Ações do botão abir/carregar ficheiro
 		fileButton.setPreferredSize(new Dimension(200, 100));
 		fileButton.addActionListener(new ActionListener() {
@@ -183,6 +199,7 @@ public class Botoes extends JFrame {
 		});
 
 		setLayout(new FlowLayout());
+		add(btnFormatoDataHora);
 		add(checkBoxLocal);
 		add(checkBoxRemoto);
 		add(this.urlRemoto);
@@ -277,7 +294,8 @@ public class Botoes extends JFrame {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Botoes();
+				ConfigApp ca = new ConfigApp();
+				new Botoes(ca);
 			}
 		});
 	}
