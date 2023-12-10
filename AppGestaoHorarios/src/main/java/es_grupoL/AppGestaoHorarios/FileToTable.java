@@ -73,13 +73,14 @@ public class FileToTable {
 
 			jsCode.append("{");  
 			for (String fieldName : this.mappedHeader) {
-				if (column == rowData.size() - 1)
-					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\"},\n"); // Ultima coluna
-				else {
-					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\","); // Resto das colunas
-					column++;
-				}
+			    if (column < rowData.size()) {
+			        jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\",");
+			        column++;
+			    } else {
+			        jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"\","); // Atribuir uma string vazia se não houver valor
+			    }
 			}
+			jsCode.append("},\n");
 		}
 
 		// Remover a vírgula final se houver dados

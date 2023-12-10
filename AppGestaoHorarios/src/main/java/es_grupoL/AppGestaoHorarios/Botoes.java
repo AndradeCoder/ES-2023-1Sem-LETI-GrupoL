@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
  * analysis criteria can be defined by the user.
  */
 public class Botoes extends JFrame {
+	private static Botoes INSTANCE = null;
 	private JTextField urlRemoto; // URL remoto a ser inserido pelo utilizador, para ficheiros remotos
 	private String filePath; // Guardar o caminho do ficheiro para usar nas funções da classe FileToTable
 	private List<String> mappedColumnsInOrder = new ArrayList<>(); // Lista ordenada dos campos mapeados. Ex: mappedColumnsInOrder.get(0) = coluna 1
@@ -33,12 +34,20 @@ public class Botoes extends JFrame {
 	private String[] formatosVisuais = {"Dia/Mês/Ano Horas(24H):Minutos:Segundos", "Mês/Dia/Ano Horas(24H):Minutos:Segundos", "Dia-Mês-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Mês-Dia-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Dia de Semana Dia-Mês-Ano Horas(24H):Minutos:Segundos", "Dia de Semana Mês-Dia-Ano Horas(24H):Minutos:Segundos", "Dia de Semana Dia-Mês-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Dia de Semana Mês-Dia-Ano Horas(12H):Minutos:Segundos (PM ou AM)"};
 	private String[] formatosReais = {"%d/%m/%Y %H:%M:%S", "%m/%d/%Y %H:%M:%S", "%d-%m-%Y %I:%M:%S %p", "%m-%d-%Y %I:%M:%S %p", "%A %d/%m/%Y %H:%M:%S", "%A %m/%d/%Y %H:%M:%S", "%A %d-%m-%Y %I:%M:%S %p", "%A %m-%d-%Y %I:%M:%S %p"};
 
-
+	public static Botoes getInstance() {
+        if (INSTANCE == null) {
+        	ConfigApp ca = new ConfigApp();
+            INSTANCE = new Botoes(ca);
+        }
+        return INSTANCE;
+    }
+	
+	
 	/**
 	 * Constructs the main application window, initializes components, and sets up
 	 * event listeners.
 	 */
-	public Botoes(ConfigApp ca) {
+	private Botoes(ConfigApp ca) {
 		this.configuracao_aplicacao = ca;
 		//System.out.println(classroomsFileMap.get(2));
 
@@ -111,7 +120,13 @@ public class Botoes extends JFrame {
                 System.out.println("Novo formato definido: " + formatosVisuais[indiceSelecionado]);
 	        }
 	    });
+	    
+	    
+	   
 		
+	    
+	    
+	    
 		// Ações do botão abir/carregar ficheiro
 		fileButton.setPreferredSize(new Dimension(200, 100));
 		fileButton.addActionListener(new ActionListener() {
@@ -140,12 +155,30 @@ public class Botoes extends JFrame {
 					if (userFileToTable.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
 						websiteButton.setVisible(true);
 					else {	
-						for (SelectButton selectButton : listOfSelects) {	// Caso contrário tem de fazer o mapeamento manual
-							selectButton.setVisible(true);
-							MappingButton.setVisible(true);
+						if(configuracao_aplicacao.getFicheiroConf() != null) {
+							
+						
+						int opcao = JOptionPane.showOptionDialog(null, "Deseja utilizar as definições usadas anteriormente?","Confirmação", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Sim", "Não"}, "Sim");
+						if(opcao == JOptionPane.NO_OPTION) {
+							for (SelectButton selectButton : listOfSelects) {	// Caso contrário tem de fazer o mapeamento manual
+								selectButton.setVisible(true);
+								MappingButton.setVisible(true);
+							}
+						} else if(opcao == JOptionPane.YES_OPTION) {
+							configuracao_aplicacao.carregarConfiguracao();
+							websiteButton.setVisible(true);
+						} else {
+							System.out.println("Não clicou em nehuma das opções, tente de novo");
 						}
+						} else {
+							for (SelectButton selectButton : listOfSelects) {	// Caso contrário tem de fazer o mapeamento manual
+								selectButton.setVisible(true);
+								MappingButton.setVisible(true);
+							}
+						
 					}
 				}
+			}
 			}
 		});
 
@@ -203,6 +236,8 @@ public class Botoes extends JFrame {
 					}
 					userFileToTable.setMappedHeader(mappedColumnsInOrder);
 					userFileToTable.setColumnsMapped(true);
+					configuracao_aplicacao.setCamposMapeamento(mappedColumnsInOrder);
+					configuracao_aplicacao.salvarConfiguracao();
 					System.out.println(mappedColumnsInOrder);
 				} else {
 					String erroCampos = "Tem de selecionar todos campos";
@@ -300,6 +335,18 @@ public class Botoes extends JFrame {
 		}
 		fi.deleteOnExit(); // Apagar ficheiro temporário
 	}
+	
+	public Map<Integer, ArrayList<String>> getUserFileMap() {
+        return this.userFileMap;
+    }
+
+    public List<String> getMappedColumnsInOrder() {
+        return mappedColumnsInOrder;
+    }
+
+    public FileToTable getUserFileToTable() {
+        return userFileToTable;
+    }
 
 	/**
 	 * The main method that initializes and runs the application.
