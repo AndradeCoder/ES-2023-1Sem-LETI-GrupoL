@@ -29,9 +29,12 @@ public class Botoes extends JFrame {
 	private FileToTable userFileToTable;	// Ficheiro do horário
 	private Map<Integer, ArrayList<String>> userFileMap;
 	private ConfigApp configuracao_aplicacao;
-	private JComboBox<String> comboFormatoDataHora; // JComboBox para o formato de data/hora
-	private String[] formatosVisuais = {"Dia/Mês/Ano Horas(24H):Minutos:Segundos", "Mês/Dia/Ano Horas(24H):Minutos:Segundos", "Dia-Mês-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Mês-Dia-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Dia de Semana Dia-Mês-Ano Horas(24H):Minutos:Segundos", "Dia de Semana Mês-Dia-Ano Horas(24H):Minutos:Segundos", "Dia de Semana Dia-Mês-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Dia de Semana Mês-Dia-Ano Horas(12H):Minutos:Segundos (PM ou AM)"};
-	private String[] formatosReais = {"%d/%m/%Y %H:%M:%S", "%m/%d/%Y %H:%M:%S", "%d-%m-%Y %I:%M:%S %p", "%m-%d-%Y %I:%M:%S %p", "%A %d/%m/%Y %H:%M:%S", "%A %m/%d/%Y %H:%M:%S", "%A %d-%m-%Y %I:%M:%S %p", "%A %m-%d-%Y %I:%M:%S %p"};
+	private JComboBox<String> comboFormatoData; // JComboBox para o formato de data
+	private JComboBox<String> comboFormatoHora; // JComboBox para o formato de hora
+	private String[] formatoDataVisual = {"Dia/Mês/Ano", "Mês/Dia/Ano"};
+	private String[] formatoDataReal = {"%d/%m/%Y", "%m/%d/%Y",};
+	private String[] formatoHoraVisual = {"Horas(24H):Minutos:Segundos", "Horas(12H):Minutos:Segundos (PM ou AM)"};
+	private String[] formatoHoraReal = {"%H:%M:%S","%I:%M:%S %p"};
 
 
 	/**
@@ -42,7 +45,6 @@ public class Botoes extends JFrame {
 		this.configuracao_aplicacao = ca;
 		//System.out.println(classroomsFileMap.get(2));
 
-        JButton btnFormatoDataHora = new JButton("Definir formato Data/Hora");
 		final JCheckBox checkBoxLocal = new JCheckBox("Ficheiro Local");
 		final JCheckBox checkBoxRemoto = new JCheckBox("Ficheiro remoto");
 		this.urlRemoto = new JTextField(20); 
@@ -55,9 +57,12 @@ public class Botoes extends JFrame {
 		List<SelectButton> listOfSelects = SelectButton.listOfSelectButtons();
 		
 		// JComboBox para o formato de data/hora
-        comboFormatoDataHora = new JComboBox<>(formatosVisuais);
-        comboFormatoDataHora.setSelectedIndex(0);
-        comboFormatoDataHora.setVisible(false);
+        comboFormatoData = new JComboBox<>(formatoDataVisual);
+        comboFormatoData.setSelectedIndex(0);
+        comboFormatoHora = new JComboBox<>(formatoHoraVisual);
+        comboFormatoHora.setSelectedIndex(0);
+        
+        urlRemoto.setVisible(false);
 
 		JPanel panel = new JPanel();
 		for (SelectButton selectButton : listOfSelects) {
@@ -82,6 +87,7 @@ public class Botoes extends JFrame {
 		// Ações das checkboxes
 		checkBoxes.add(checkBoxLocal);
 		checkBoxes.add(checkBoxRemoto);
+		checkBoxLocal.setVisible(false);
 		checkBoxLocal.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -89,6 +95,7 @@ public class Botoes extends JFrame {
 				urlRemoto.setEnabled(false);
 			}
 		});
+		checkBoxRemoto.setVisible(false);
 		checkBoxRemoto.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -98,21 +105,38 @@ public class Botoes extends JFrame {
 		});
 
 		// Ações do botão Definir formato Data/Hora
-		btnFormatoDataHora.setVisible(false);
-		btnFormatoDataHora.setPreferredSize(new Dimension(200, 100));
-	    btnFormatoDataHora.addActionListener(new ActionListener() {
+	    comboFormatoData.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            // Obter o formato selecionado do JComboBox
-	        	int indiceSelecionado = comboFormatoDataHora.getSelectedIndex();
-	        	String formatoSelecionado = formatosReais[indiceSelecionado];
-                configuracao_aplicacao.setFormatoDataHora(formatoSelecionado);
+	        	int indiceSelecionado = comboFormatoData.getSelectedIndex();
+	        	String formatoSelecionado = formatoDataReal[indiceSelecionado];
+                configuracao_aplicacao.setFormatoData(formatoSelecionado);
                 configuracao_aplicacao.salvarConfiguracao();
-                System.out.println("Novo formato definido: " + formatosVisuais[indiceSelecionado]);
+                comboFormatoHora.setVisible(true);
+                System.out.println("Novo formato definido: " + formatoDataVisual[indiceSelecionado]);
+	        }
+	    });
+	    
+	    comboFormatoHora.setVisible(false);
+	    comboFormatoHora.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            // Obter o formato selecionado do JComboBox
+	        	int indiceSelecionado = comboFormatoHora.getSelectedIndex();
+	        	String formatoSelecionado = formatoHoraReal[indiceSelecionado];
+                configuracao_aplicacao.setFormatoHora(formatoSelecionado);
+                configuracao_aplicacao.salvarConfiguracao();
+                checkBoxLocal.setVisible(true);
+                checkBoxRemoto.setVisible(true);
+                urlRemoto.setVisible(true);
+                fileButton.setVisible(true);
+                System.out.println("Novo formato definido: " + formatoHoraVisual[indiceSelecionado]);
 	        }
 	    });
 		
 		// Ações do botão abir/carregar ficheiro
+	    fileButton.setVisible(false);
 		fileButton.setPreferredSize(new Dimension(200, 100));
 		fileButton.addActionListener(new ActionListener() {
 
@@ -131,11 +155,9 @@ public class Botoes extends JFrame {
 
 				if (filePath != null && !filePath.isBlank()) {
 					File file = new File(filePath);
-					userFileToTable = new FileToTable(file);
+					userFileToTable = new FileToTable(file, ca);
 					userFileMap = userFileToTable.readCSV();
 					CancellingButton.setVisible(true);
-					btnFormatoDataHora.setVisible(true);
-					comboFormatoDataHora.setVisible(true);
 
 					if (userFileToTable.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
 						websiteButton.setVisible(true);
@@ -213,8 +235,8 @@ public class Botoes extends JFrame {
 		});
 
 		setLayout(new FlowLayout());
-		add(btnFormatoDataHora);
-		add(comboFormatoDataHora);
+		add(comboFormatoData);
+		add(comboFormatoHora);
 		add(checkBoxLocal);
 		add(checkBoxRemoto);
 		add(this.urlRemoto);

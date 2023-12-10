@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public class ConfigApp {
     private static final String arquivoConfiguracao = "config.txt";
-    private String formatoDataHora;
+    private String formatoData;
+    private String formatoHora;
 
     public ConfigApp() {
         carregarConfiguracao();
@@ -17,32 +18,54 @@ public class ConfigApp {
     private void carregarConfiguracao() {
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoConfiguracao))) {
             // Lê a primeira linha do arquivo como formatoDataHora
-            formatoDataHora = leitor.readLine();
+            formatoData = leitor.readLine();
+            formatoHora = leitor.readLine();
         } catch (IOException e) {
             System.err.println("Erro ao carregar o arquivo de configuração. Usando configurações padrão.");
-            formatoDataHora = "%Y-%m-%d %H:%M:%S";
+            formatoData = "%Y-%m-%d";
+            formatoHora = "%H:%M:%S";
         }
     }
 
     public void salvarConfiguracao() {
         try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivoConfiguracao))) {
             // Escreve o formatoDataHora no arquivo
-            escritor.write(formatoDataHora);
+        	if(formatoData == null) {
+        		formatoData = "%Y-%m-%d";
+        	}
+        	if(formatoHora == null) {
+        		formatoHora = "%H:%M:%S";
+        	}
+            escritor.write(formatoData);
+            escritor.write(formatoHora);
         } catch (IOException e) {
             System.err.println("Erro ao salvar o arquivo de configuração.");
         }
     }
 
-    public String getFormatoDataHora() {
-        return formatoDataHora;
+    // Obtém o formato de data
+    public String getFormatoData() {
+        return formatoData;
     }
-
-    public void setFormatoDataHora(String formatoDataHora) {
-        this.formatoDataHora = formatoDataHora;
+    
+    // Obtém o formato de horário
+    public String getFormatoHora() {
+        return formatoHora;
+    }
+    
+    // Define o formato de data
+    public void setFormatoData(String formatoData) {
+        this.formatoData = formatoData;
+    }
+    
+    // Define o formato de horário
+    public void setFormatoHora(String formatoHora) {
+        this.formatoHora = formatoHora;
     }
 
     public static void main(String[] args) {
         ConfigApp configuracaoApp = new ConfigApp();
-        System.out.println("Formato de Data/Hora: " + configuracaoApp.getFormatoDataHora());
+        System.out.println("Formato de Data: " + configuracaoApp.getFormatoData());
+        System.out.println("Formato de Hora: " + configuracaoApp.getFormatoHora());
     }
 }
