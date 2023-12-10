@@ -21,14 +21,17 @@ public class FileToTable {
 	private boolean columnsMapped = false;
 	private File file;
 	private List<String> mappedHeader = new ArrayList<>();
+	//atributo não utilizado
+	private ConfigApp configuracao_aplicacao;
 
 	/**
      * Constructs a `FileToTable` object for processing a given CSV file.
      *
      * @param file The CSV file to be processed.
      */
-	public FileToTable(File file) {
+	public FileToTable(File file, ConfigApp configuracao_aplicacao) {
 		this.file = file;
+		this.configuracao_aplicacao = configuracao_aplicacao;
 	}
 
 	/**
@@ -55,6 +58,14 @@ public class FileToTable {
 		return fileLineInfo;
 	}
 
+	//métodos formatarData e formatarHora inacabados, não foi possível alterar os valores de data e horario na tabela no website
+	private String formatarData(String valor) {
+	    return String.format(configuracao_aplicacao.getFormatoData(), valor);
+	}
+
+	private String formatarHora(String valor) {
+	    return String.format(configuracao_aplicacao.getFormatoHora(), valor);
+	}
 	/**
      * Creates an HTML representation of the data for visualization using JavaScript.
      *
@@ -73,12 +84,17 @@ public class FileToTable {
 
 			jsCode.append("{");  
 			for (String fieldName : this.mappedHeader) {
-			    if (column < rowData.size()) {
-			        jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\",");
-			        column++;
-			    } else {
-			        jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"\","); // Atribuir uma string vazia se não houver valor
-			    }
+
+			   
+
+				String value = rowData.get(column);
+				if (column == rowData.size() - 1)
+					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\"},\n"); // Ultima coluna
+				else {
+					jsCode.append(ColunasHorario.getConstant(fieldName) + ": \"" + rowData.get(column) + "\","); // Resto das colunas
+					column++;
+				}
+
 			}
 			jsCode.append("},\n");
 		}
@@ -185,10 +201,11 @@ public class FileToTable {
      * @param args The command-line arguments.
      */
 	public static void main(String[] args) {
+		ConfigApp ca = new ConfigApp();
 		File file = new File("C:\\Users\\leoth\\Downloads\\HorarioDeExemplo.csv");
-		FileToTable ftt = new FileToTable(file);
-		FileToTable a = new FileToTable(file);
-		FileToTable b = new FileToTable(file);
+		FileToTable ftt = new FileToTable(file, ca);
+		FileToTable a = new FileToTable(file, ca);
+		FileToTable b = new FileToTable(file, ca);
 		ftt.readCSV(); // Teste temporário e este caminho só funciona no meu pc como é óbvio
 		Map<Integer, ArrayList<String>> map = a.readCSV(); // Teste temporário e este caminho só funciona no meu pc como
 															// é óbvio
