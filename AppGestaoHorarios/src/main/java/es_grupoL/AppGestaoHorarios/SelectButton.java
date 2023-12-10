@@ -22,7 +22,7 @@ public class SelectButton extends JButton {
 	 * Constructs a SelectButton with the specified text and options.
 	 *
 	 * @param text    The text to be displayed on the button.
-	 * @param options The list of options to be displayed in the pop-up menu.
+	 * @param options The list of options (columns) to be displayed in the pop-up menu.
 	 */
 	public SelectButton(String text, List<String> options) {
 		super(text);

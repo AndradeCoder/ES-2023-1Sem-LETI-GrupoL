@@ -101,6 +101,12 @@ public enum ColunasSalas {
 		return columnsList;
 	}
 
+	public static boolean columnDataType(ColunasSalas column) {
+		if (column.equals(ColunasSalas.CapacidadeNormal) || column.equals(ColunasSalas.CapacidadeExame) 
+				|| column.equals(ColunasSalas.NumCaracteristicas))
+			return true;
+		return false;
+	} 
 
 	/**
 	 * Gets information from the classrooms file based on a specified column and its corresponding field value, 

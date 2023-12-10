@@ -1,10 +1,20 @@
 package es_grupoL.AppGestaoHorarios;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+//import java.sql.Date;
+//import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Enum representing the columns in the user inputed schedule file. Each constant represents
@@ -18,7 +28,7 @@ public enum ColunasHorario {
 	InscritosNoTurno(4, "Inscritos no turno"), DiaDaSemana(5, "Dia da semana"),
 	HoraInicioDaAula(6, "Hora início da aula"), HoraFimDaAula(7, "Hora fim da aula"), DataDaAula(8, "Data da aula"),
 	CaracteristicasDaSalaPedidaParaAAula(9, "Características da sala pedida para a aula"),
-	SalaAtribuídaÀAula(10, "Sala atribuída à aula");
+	SalaAtribuidaAAula(10, "Sala atribuída à aula");
 
 	private final String columnName; // Não faz diferença ser final aqui, apenas serve para indicar que não se deve mudar
 	private int index;	// Estes valores são os default, podendo variar para cada constante consuante o mapeamento
@@ -90,12 +100,30 @@ public enum ColunasHorario {
 	}
 
 	/**
-	 * Changes the index of the {@code ColunasHorario} constants. 
+	 * Changes the index of the {@code ColunasHorario} constants based on the schedule file and it's mapping. 
 	 */
 	private static void changeIndex() {
 		List<String> mappedColumns = Botoes.getInstance().getMappedColumnsInOrder();
 		for (ColunasHorario ch : constantsList())
 			ch.index = mappedColumns.indexOf(ch.columnName);
+	}
+
+	public static boolean columnDataType(ColunasHorario column) {
+		if (column.equals(ColunasHorario.InscritosNoTurno))
+			return true;
+		return false;
+	} 
+	
+	public static List<Integer> listOfDateAndTimes(){
+		List<Integer> list = new ArrayList<>();
+		for (ColunasHorario ch : constantsList()) {
+			switch (ch) {
+			case HoraInicioDaAula: list.add(ch.index); break;
+			case HoraFimDaAula: list.add(ch.index); break;
+			case DataDaAula: list.add(ch.index); break;
+			}
+		}
+		return list;
 	}
 
 	/**

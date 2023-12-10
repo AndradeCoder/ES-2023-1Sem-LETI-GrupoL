@@ -157,6 +157,9 @@ public class Botoes extends JFrame {
 						mappedColumnsInOrder.add(selectButton.getText());
 					}
 					userFileToTable.setMappedHeader(mappedColumnsInOrder);
+					userFileToTable.setColumnsMapped(true);
+					System.out.println(userFileToTable.getMappedHeader());
+					System.out.println(userFileToTable.isColumnsMapped());
 					System.out.println(mappedColumnsInOrder);
 				} else {
 					System.out.println("Tem de selecionar todos os campos");
@@ -251,6 +254,10 @@ public class Botoes extends JFrame {
 
 	public List<String> getMappedColumnsInOrder() {
 		return mappedColumnsInOrder;
+	}
+
+	public FileToTable getUserFileToTable() {
+		return userFileToTable;
 	}
 
 	/**

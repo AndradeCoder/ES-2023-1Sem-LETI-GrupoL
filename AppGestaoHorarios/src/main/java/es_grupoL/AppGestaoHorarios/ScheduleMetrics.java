@@ -3,16 +3,30 @@ package es_grupoL.AppGestaoHorarios;
 /**
  * Utility class for generating HTML dropdown options for schedule metrics.
  * 
- * @version 1.0
+ * @version 1.1
  */
 public class ScheduleMetrics {
+	
+	public static String metricOptions() {
+		StringBuilder metricOptions = new StringBuilder();
+
+		metricOptions.append("\t\t<option></option>\n");
+		appendOption(metricOptions, "filtro1", "Nº de aulas em sobrelotação");
+		appendOption(metricOptions, "filtro2", "Nº de alunos em aulas com sobrelotação");
+		appendOption(metricOptions, "filtro3", "Nº de aulas sem caraterísticas solicitadas pelo docente");
+		appendOption(metricOptions, "filtro4", "Nº de aulas em que não foi atribuída sala");
+		appendOption(metricOptions, "filtro5", "Nº de características desperdiçadas nas salas atribuídas às aulas");
+		appendOption(metricOptions, "filtro6", "Duração da aula");
+
+		return metricOptions.toString();
+	}
 
 	/**
 	 * Generates HTML dropdown options for the columns of the schedule and classrooms files.
 	 *
 	 * @return StringBuilder containing HTML dropdown options.
 	 */
-	public static StringBuilder columnOptions() {
+	public static String columnOptions() {
 		StringBuilder columnOptions = new StringBuilder();
 
 		columnOptions.append("\t\t<option></option>\n");	// Opção vazia
@@ -22,7 +36,7 @@ public class ScheduleMetrics {
 		for (ColunasSalas cs : ColunasSalas.constantsList()) {
 			appendOption(columnOptions, cs, cs.getColumnName());
 		}
-		return columnOptions;
+		return columnOptions.toString();
 	}
 
 	/**
@@ -30,22 +44,22 @@ public class ScheduleMetrics {
 	 *
 	 * @return StringBuilder containing HTML dropdown options.
 	 */
-	public static StringBuilder operatorOptions() {
+	public static String operatorOptions() {
 		StringBuilder operatorOptions = new StringBuilder();
 
+		operatorOptions.append("\t\t<option></option>\n");
 		appendOption(operatorOptions, "||", "OR");
 		appendOption(operatorOptions, "&&", "AND");
 		appendOption(operatorOptions, "+", "+");
 		appendOption(operatorOptions, "-", "-");
-		appendOption(operatorOptions, "=", "=");
-		appendOption(operatorOptions, "lt", "&lt;");
-		appendOption(operatorOptions, "le", "&le;");
-		appendOption(operatorOptions, "gt", "&gt;");
-		appendOption(operatorOptions, "ge", "&ge;");
+		appendOption(operatorOptions, "==", "=");
+		appendOption(operatorOptions, "&lt;", "&lt;");
+		appendOption(operatorOptions, "&lt;=", "&lt;=");
+		appendOption(operatorOptions, "&gt;", "&gt;");
+		appendOption(operatorOptions, "&gt;=", "&gt;=");
 		appendOption(operatorOptions, "!=", "!=");
-		appendOption(operatorOptions, "like", "like");
 
-		return operatorOptions;
+		return operatorOptions.toString();
 	}
 
 	/**
