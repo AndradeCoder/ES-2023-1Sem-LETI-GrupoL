@@ -39,7 +39,6 @@ public class ConfigApp {
 
     public void setFormatoDataHora(String formatoDataHora) {
         this.formatoDataHora = formatoDataHora;
-        salvarConfiguracao();
     }
 
     public static void main(String[] args) {

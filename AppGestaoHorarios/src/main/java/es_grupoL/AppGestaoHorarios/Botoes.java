@@ -29,6 +29,10 @@ public class Botoes extends JFrame {
 	private FileToTable userFileToTable;	// Ficheiro do horário
 	private Map<Integer, ArrayList<String>> userFileMap;
 	private ConfigApp configuracao_aplicacao;
+	private JComboBox<String> comboFormatoDataHora; // JComboBox para o formato de data/hora
+	private String[] formatosVisuais = {"Dia/Mês/Ano Horas(24H):Minutos:Segundos", "Mês/Dia/Ano Horas(24H):Minutos:Segundos", "Dia-Mês-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Mês-Dia-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Dia de Semana Dia-Mês-Ano Horas(24H):Minutos:Segundos", "Dia de Semana Mês-Dia-Ano Horas(24H):Minutos:Segundos", "Dia de Semana Dia-Mês-Ano Horas(12H):Minutos:Segundos (PM ou AM)", "Dia de Semana Mês-Dia-Ano Horas(12H):Minutos:Segundos (PM ou AM)"};
+	private String[] formatosReais = {"%d/%m/%Y %H:%M:%S", "%m/%d/%Y %H:%M:%S", "%d-%m-%Y %I:%M:%S %p", "%m-%d-%Y %I:%M:%S %p", "%A %d/%m/%Y %H:%M:%S", "%A %m/%d/%Y %H:%M:%S", "%A %d-%m-%Y %I:%M:%S %p", "%A %m-%d-%Y %I:%M:%S %p"};
+
 
 	/**
 	 * Constructs the main application window, initializes components, and sets up
@@ -38,7 +42,7 @@ public class Botoes extends JFrame {
 		this.configuracao_aplicacao = ca;
 		//System.out.println(classroomsFileMap.get(2));
 
-        JButton btnFormatoDataHora = new JButton("Formato Data/Hora");
+        JButton btnFormatoDataHora = new JButton("Definir formato Data/Hora");
 		final JCheckBox checkBoxLocal = new JCheckBox("Ficheiro Local");
 		final JCheckBox checkBoxRemoto = new JCheckBox("Ficheiro remoto");
 		this.urlRemoto = new JTextField(20); 
@@ -49,6 +53,11 @@ public class Botoes extends JFrame {
 		JButton CancellingButton = new JButton("Apagar ficheiro");
 		ButtonGroup checkBoxes = new ButtonGroup();
 		List<SelectButton> listOfSelects = SelectButton.listOfSelectButtons();
+		
+		// JComboBox para o formato de data/hora
+        comboFormatoDataHora = new JComboBox<>(formatosVisuais);
+        comboFormatoDataHora.setSelectedIndex(0);
+        comboFormatoDataHora.setVisible(false);
 
 		JPanel panel = new JPanel();
 		for (SelectButton selectButton : listOfSelects) {
@@ -88,19 +97,20 @@ public class Botoes extends JFrame {
 			}
 		});
 
-		// Ações do botão Formato Data/Hora
+		// Ações do botão Definir formato Data/Hora
 		btnFormatoDataHora.setVisible(false);
 		btnFormatoDataHora.setPreferredSize(new Dimension(200, 100));
-		btnFormatoDataHora.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	//necessario alterar
-            	configuracao_aplicacao.setFormatoDataHora("%d/%m/%Y %H:%M:%S");
-            	
-            	configuracao_aplicacao.salvarConfiguracao();
-                System.out.println("Novo formato definido: " + configuracao_aplicacao.getFormatoDataHora());
-            }
-        });
+	    btnFormatoDataHora.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            // Obter o formato selecionado do JComboBox
+	        	int indiceSelecionado = comboFormatoDataHora.getSelectedIndex();
+	        	String formatoSelecionado = formatosReais[indiceSelecionado];
+                configuracao_aplicacao.setFormatoDataHora(formatoSelecionado);
+                configuracao_aplicacao.salvarConfiguracao();
+                System.out.println("Novo formato definido: " + formatosVisuais[indiceSelecionado]);
+	        }
+	    });
 		
 		// Ações do botão abir/carregar ficheiro
 		fileButton.setPreferredSize(new Dimension(200, 100));
@@ -125,6 +135,7 @@ public class Botoes extends JFrame {
 					userFileMap = userFileToTable.readCSV();
 					CancellingButton.setVisible(true);
 					btnFormatoDataHora.setVisible(true);
+					comboFormatoDataHora.setVisible(true);
 
 					if (userFileToTable.isColumnsMapped()) // Se o mapeamento é automático (ficheiro tem header) então o botão do website aparece
 						websiteButton.setVisible(true);
@@ -173,7 +184,7 @@ public class Botoes extends JFrame {
 			}
 		});
 
-		// Acões do butão de confirmar mapeamento
+		// Acões do botão de confirmar mapeamento
 		MappingButton.setVisible(false);
 		MappingButton.setBackground(Color.GREEN);
 		MappingButton.setPreferredSize(new Dimension(MappingButton.getPreferredSize().width, 50));
@@ -191,6 +202,7 @@ public class Botoes extends JFrame {
 						mappedColumnsInOrder.add(selectButton.getText());
 					}
 					userFileToTable.setMappedHeader(mappedColumnsInOrder);
+					userFileToTable.setColumnsMapped(true);
 					System.out.println(mappedColumnsInOrder);
 				} else {
 					String erroCampos = "Tem de selecionar todos campos";
@@ -202,6 +214,7 @@ public class Botoes extends JFrame {
 
 		setLayout(new FlowLayout());
 		add(btnFormatoDataHora);
+		add(comboFormatoDataHora);
 		add(checkBoxLocal);
 		add(checkBoxRemoto);
 		add(this.urlRemoto);

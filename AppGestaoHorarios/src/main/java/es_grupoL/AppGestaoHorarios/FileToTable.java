@@ -31,7 +31,6 @@ public class FileToTable {
 		this.file = file;
 	}
 
-	
 	/**
      * Reads the CSV file and converts it into a `Map` containing rows of data.
      *
@@ -178,7 +177,7 @@ public class FileToTable {
     public void setMappedHeader(List<String> header) {
         this.mappedHeader = header;
     }
-
+    
     /**
      * The main method for testing `FileToTable` class functionality.
      *
