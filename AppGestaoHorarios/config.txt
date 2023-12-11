@@ -1,0 +1,2 @@
+%d/%m/%Y %H:%M:%S
+Curso;Unidade Curricular;Turno;Turma;Inscritos no turno;Dia da semana;Hora início da aula;Hora fim da aula;Data da aula;Características da sala pedida para a aula;Sala atribuída à aula;
