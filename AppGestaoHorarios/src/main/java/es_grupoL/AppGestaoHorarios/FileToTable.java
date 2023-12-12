@@ -110,9 +110,7 @@ public class FileToTable {
 						column++;
 					}
 				}
-
 			}
-			jsCode.append("},\n");
 		}
 
 		// Remover a vírgula final se houver dados
