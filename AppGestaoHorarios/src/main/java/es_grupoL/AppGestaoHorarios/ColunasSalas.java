@@ -35,7 +35,7 @@ public enum ColunasSalas {
 
 	private final int index;
 	private final String columnName;
-	private static FileToTable classroomsFileToTable = new FileToTable(new File("CaracterizaçãoDasSalas.csv")); // Ficheiro das salas
+	private static FileToTable classroomsFileToTable = new FileToTable(new File("CaracterizaçãoDasSalas.csv"), null); // Ficheiro das salas
 
 	ColunasSalas(int index, String columnName) {
 		this.index = index;
