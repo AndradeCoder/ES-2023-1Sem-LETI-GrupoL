@@ -1,13 +1,11 @@
 package es_grupoL.AppGestaoHorarios;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 /**
  * Custom {@code JButton} class for selecting options from a list. It displays a pop-up menu
