@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link href="https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css" rel="stylesheet">
+	<link href="styles.css" rel="stylesheet">
+	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js"></script>
+	<title>HorarioDeExemplo.csv</title>
+</head>
+
+<body class="body-dots">
+	<H2>Métricas predefinidas</H2>
+	<div>
+		<select id="metricasPredefinidas">
+					<option></option>
+		<optgroup label="Métricas default da aplicação">
+		<option value="metrica1">Nº de aulas em sobrelotação</option>
+		<option value="metrica2">Nº de alunos em aulas com sobrelotação</option>
+		<option value="metrica3">Nº de aulas sem caraterísticas solicitadas pelo docente</option>
+		<option value="metrica4">Nº de aulas em que não foi atribuída sala</option>
+		<option value="metrica5">Nº de características desperdiçadas nas salas atribuídas às aulas</option>
+		</optgroup>
+		<optgroup id="MetricasCustomizadas" label="Métricas customizadas pelo user" disabled>		</optgroup>
+
+		</select>
+	</div>
+
+	<H2>Cálculo de métricas</H2>
+	<div>
+		<select id="select-campo">
+					<option></option>
+		<optgroup label="Ficheiro Horário">
+			<option value="Curso">Curso</option>
+			<option value="UnidadeCurricular">Unidade Curricular</option>
+			<option value="Turno">Turno</option>
+			<option value="Turma">Turma</option>
+			<option value="InscritosNoTurno">Inscritos no turno</option>
+			<option value="DiaDaSemana">Dia da semana</option>
+			<option value="HoraInicioDaAula">Hora início da aula</option>
+			<option value="HoraFimDaAula">Hora fim da aula</option>
+			<option value="DataDaAula">Data da aula</option>
+			<option value="CaracteristicasDaSalaPedidaParaAAula">Características da sala pedida para a aula</option>
+			<option value="SalaAtribuidaAAula">Sala atribuída à aula</option>
+		</optgroup>
+		<optgroup label="Ficheiro Salas">
+			<option value="Edificio">Edifício</option>
+			<option value="NomeSala">Nome sala</option>
+			<option value="CapacidadeNormal">Capacidade Normal</option>
+			<option value="CapacidadeExame">Capacidade Exame</option>
+			<option value="NumCaracteristicas">Nº características</option>
+			<option value="AnfiteatroAulas">Anfiteatro aulas</option>
+			<option value="ApoioTecnicoEventos">Apoio técnico eventos</option>
+			<option value="Arq1">Arq 1</option>
+			<option value="Arq2">Arq 2</option>
+			<option value="Arq3">Arq 3</option>
+			<option value="Arq4">Arq 4</option>
+			<option value="Arq5">Arq 5</option>
+			<option value="Arq6">Arq 6</option>
+			<option value="Arq9">Arq 9</option>
+			<option value="BYOD">BYOD (Bring Your Own Device)</option>
+			<option value="FocusGroup">Focus Group</option>
+			<option value="HorarioSalaVisivelPortalPublico">Horário sala visível portal público</option>
+			<option value="LaboratorioArquiteturaComputadoresI">Laboratório de Arquitectura de Computadores I</option>
+			<option value="LaboratorioArquiteturaComputadoresII">Laboratório de Arquitectura de Computadores II</option>
+			<option value="LaboratorioBasesEngenharia">Laboratório de Bases de Engenharia</option>
+			<option value="LaboratorioEletronica">Laboratório de Electrónica</option>
+			<option value="LaboratorioInformatica">Laboratório de Informática</option>
+			<option value="LaboratorioJornalismo">Laboratório de Jornalismo</option>
+			<option value="LaboratorioRedesComputadoresI">Laboratório de Redes de Computadores I</option>
+			<option value="LaboratorioRedesComputadoresII">Laboratório de Redes de Computadores II</option>
+			<option value="LaboratorioTelecomunicacoes">Laboratório de Telecomunicações</option>
+			<option value="SalaAulasMestrado">Sala Aulas Mestrado</option>
+			<option value="SalaAulasMestradoPlus">Sala Aulas Mestrado Plus</option>
+			<option value="SalaNEE">Sala NEE</option>
+			<option value="SalaProvas">Sala Provas</option>
+			<option value="SalaReuniao">Sala Reunião</option>
+			<option value="SalaArquitetura">Sala de Arquitectura</option>
+			<option value="SalaAulasNormal">Sala de Aulas normal</option>
+			<option value="Videoconferencia">videoconferência</option>
+			<option value="Atrio">Átrio</option>
+		</optgroup>
+
+		</select>
+
+		<select id="select-operador">
+					<option></option>
+		<option value="||">OR</option>
+		<option value="&&">AND</option>
+		<option value="+">+</option>
+		<option value="-">-</option>
+		<option value="==">=</option>
+		<option value="&lt;">&lt;</option>
+		<option value="&lt;=">&lt;=</option>
+		<option value="&gt;">&gt;</option>
+		<option value="&gt;=">&gt;=</option>
+		<option value="!=">!=</option>
+
+		</select>
+
+		<input id="input-valor" type="text" placeholder="valor">
+		<button id="button-confirmar" onclick="addToFormula()">Adicionar</button>
+		<button id="button-resultado" onclick="showResults()">Obter resultado</button>
+		<button id="button-clear" onclick="clearMetric()">Clear Filter</button>
+	</div>
+
+	<div id="resultado-obtido">
+		<div id="filter-result"></div>
+		<p><br><br></p>
+	</div>
+
+	<H2>Salas Disponiveis</H2>
+	<div>
+		<input id="input-capacidadeMin" type="number" placeholder="Capacidade min.">
+		<input id="input-capacidadeMax" type="number" placeholder="Capacidade max.">
+		<input list="ColunasSalas" id="input-caraterística" type="text" placeholder="Caraterística da Sala">
+				<datalist id="ColunasSalas">
+		<option value="Anfiteatro aulas"></option>
+		<option value="Apoio técnico eventos"></option>
+		<option value="Arq 1"></option>
+		<option value="Arq 2"></option>
+		<option value="Arq 3"></option>
+		<option value="Arq 4"></option>
+		<option value="Arq 5"></option>
+		<option value="Arq 6"></option>
+		<option value="Arq 9"></option>
+		<option value="BYOD (Bring Your Own Device)"></option>
+		<option value="Focus Group"></option>
+		<option value="Horário sala visível portal público"></option>
+		<option value="Laboratório de Arquitectura de Computadores I"></option>
+		<option value="Laboratório de Arquitectura de Computadores II"></option>
+		<option value="Laboratório de Bases de Engenharia"></option>
+		<option value="Laboratório de Electrónica"></option>
+		<option value="Laboratório de Informática"></option>
+		<option value="Laboratório de Jornalismo"></option>
+		<option value="Laboratório de Redes de Computadores I"></option>
+		<option value="Laboratório de Redes de Computadores II"></option>
+		<option value="Laboratório de Telecomunicações"></option>
+		<option value="Sala Aulas Mestrado"></option>
+		<option value="Sala Aulas Mestrado Plus"></option>
+		<option value="Sala NEE"></option>
+		<option value="Sala Provas"></option>
+		<option value="Sala Reunião"></option>
+		<option value="Sala de Arquitectura"></option>
+		<option value="Sala de Aulas normal"></option>
+		<option value="videoconferência"></option>
+		<option value="Átrio"></option>
+		</datalist>
+
+
+		<button id="button-SalasDisponiveis" onclick="SalasDisponiveis()">Salas Disponiveis</button>
+	</div>
+
+	<header id="horarioHeader">
+		<h1>Horário</h1>
+	</header>
+
+
+	<header id="resultadosHeader" class="hidden">
+		<H1>Resultado</H1>
+		<p><h5>Está a visualizar o resultado da métrica aplicada, pressione "Clear Filter" para ver a tabela original</h5></p>
+		<span id="resultados"></span>
+	</header>
+
+	<div id="example-table"></div>
+
+	<div id="popup">
+		<button onclick="closePopup()">Close</button>
+		<div id="popup-content"></div>
+	</div>
+
+	<script defer src="data.js"></script>
+	<script defer src="main.js"></script>
+    <script defer src="dataManipulation.js"></script>
+    <script defer src="metrics.js"></script>
+</body>
+</html>
