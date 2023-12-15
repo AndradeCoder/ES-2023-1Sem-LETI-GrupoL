@@ -289,16 +289,15 @@ public class Botoes extends JFrame {
 	private void openWebsite() {	
 		this.userFileToTable.createHTML(this.userFileMap);
 		Desktop desk = Desktop.getDesktop();
-		String filepath = System.getProperty("user.dir") + "ScheduleApp/ScheduleApp.html";
-		System.out.println("Open website: "+filepath);
-		filepath = filepath.replace("\\", "/");
-
+		String filePath = System.getProperty("user.dir") + File.separator + FileToTable.MAIN_FOLDER + "ScheduleApp.html";
+		filePath = filePath.replace("\\", "/");
+		System.out.println("Open website: "+filePath);
+		
 		try {
-			desk.browse(new java.net.URI("file://" + filepath));
+			desk.browse(new java.net.URI("file://" + filePath));
 		} catch (IOException | URISyntaxException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 	}
 
 	/**

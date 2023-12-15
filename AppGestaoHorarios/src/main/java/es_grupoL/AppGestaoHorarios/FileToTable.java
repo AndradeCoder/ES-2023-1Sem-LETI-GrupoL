@@ -29,7 +29,7 @@ public class FileToTable {
 	private boolean columnsMapped = false;
 	private File file;
 	private static List<String> mappedHeader = new ArrayList<>();
-	private static String MAIN_FOLDER = "ScheduleApp/";	// Pasta onde estão localizados todos os ficheiros, incluindo os templates
+	public static String MAIN_FOLDER = "ScheduleApp/";	// Pasta onde estão localizados todos os ficheiros, incluindo os templates
 	private static final VelocityEngine velocityEngine = new VelocityEngine();
 
 	//atributo não utilizado
@@ -211,7 +211,7 @@ public class FileToTable {
 		try (Scanner scanner = new Scanner(new File(template))){
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
-				System.out.println("Read line: " + line);
+				
 				if(!line.contains("//Insert here"))
 					tabulatorColumns.append(line+"\n");
 				else {

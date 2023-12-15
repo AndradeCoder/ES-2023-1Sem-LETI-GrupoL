@@ -1,6 +1,6 @@
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f9f4e9; 
+  background-color: #f9f4e9;
 }
 
 .body-dots {
@@ -20,11 +20,12 @@ h1, h2, h3, h4 {
 #resultados {
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 45px;
+  border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 14px;
   margin: 20px auto;
   max-width: 1000px;
+  overflow-x: auto;
   text-align: center;
 }
 
@@ -39,8 +40,8 @@ h1, h2, h3, h4 {
 
 #resultado-obtido {
   font-family: 'Arial', sans-serif;
-  margin-top: px;
-  color: #4d4d4d
+  margin-top: 10px;
+  color: #4d4d4d;
 }
 
 #example-table {
@@ -61,29 +62,16 @@ h1, h2, h3, h4 {
   max-width: 60vw;
 }
 
-/* Styles for datalist and optgroup elements */
-select {
-  width: 100%;
+.estiloSelect {
+  width: 400px; /* Adjusted width and removed margin-top and margin-bottom */
   padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-optgroup {
-  background-color: #e0e0e0;
-  color: #333;
-  font-weight: bold;
 }
 
 optgroup[disabled] {
   background-color: #f2f2f2;
   color: #999;
-}
-
-option {
-  color: #333;
 }
 
 option:disabled {
