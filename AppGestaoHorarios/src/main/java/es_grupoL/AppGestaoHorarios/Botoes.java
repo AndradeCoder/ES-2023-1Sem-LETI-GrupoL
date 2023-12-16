@@ -166,7 +166,7 @@ public class Botoes extends JFrame {
 
 				if (filePath != null && !filePath.isBlank()) {
 					File file = new File(filePath);
-					userFileToTable = new FileToTable(file, ca);
+					userFileToTable = new FileToTable(file);
 					userFileMap = userFileToTable.readCSV();
 					CancellingButton.setVisible(true);
 
@@ -289,15 +289,15 @@ public class Botoes extends JFrame {
 	private void openWebsite() {	
 		this.userFileToTable.createHTML(this.userFileMap);
 		Desktop desk = Desktop.getDesktop();
-		String filepath = System.getProperty("user.dir") + "/ScheduleApp.html";
-		filepath = filepath.replace("\\", "/");
-
+		String filePath = System.getProperty("user.dir") + File.separator + FileToTable.MAIN_FOLDER + "ScheduleApp.html";
+		filePath = filePath.replace("\\", "/");
+		System.out.println("Open website: "+filePath);
+		
 		try {
-			desk.browse(new java.net.URI("file://" + filepath));
+			desk.browse(new java.net.URI("file://" + filePath));
 		} catch (IOException | URISyntaxException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 	}
 
 	/**
@@ -353,16 +353,40 @@ public class Botoes extends JFrame {
 		fi.deleteOnExit(); // Apagar ficheiro temporário
 	}
 
+	/**
+	 * Returns the user file map.
+	 *
+	 * @return The user file map.
+	 */
 	public Map<Integer, ArrayList<String>> getUserFileMap() {
 		return this.userFileMap;
 	}
 
+	/**
+	 * Returns the mapped columns in order.
+	 *
+	 * @return The mapped columns in order.
+	 */
 	public List<String> getMappedColumnsInOrder() {
 		return mappedColumnsInOrder;
 	}
 
+	/**
+	 * Returns the user file to table.
+	 *
+	 * @return The user file to table.
+	 */
 	public FileToTable getUserFileToTable() {
 		return userFileToTable;
+	}
+
+	/**
+	 * Returns the application configuration.
+	 *
+	 * @return The application configuration.
+	 */
+	public ConfigApp getConfiguracao_aplicacao() {
+		return configuracao_aplicacao;
 	}
 
 	/**
