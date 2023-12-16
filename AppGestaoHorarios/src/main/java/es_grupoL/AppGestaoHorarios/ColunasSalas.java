@@ -2,14 +2,12 @@ package es_grupoL.AppGestaoHorarios;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
- * Enum representing the columns of a file containing information about classrooms. It provides methods to retrieve information 
- * about classrooms based on specific criteria. Each constant represents a specific column in the classrooms data.
+ * Enum representing the columns of a file containing information about classrooms.
+ * It provides methods to retrieve information about classrooms based on specific criteria.
+ * Each constant represents a specific column in the classrooms data.
  * 
  * @version 1.1
  */
@@ -33,9 +31,9 @@ public enum ColunasSalas {
 	SalaReuniao(30, "Sala Reunião"), SalaArquitetura(31, "Sala de Arquitectura"),
 	SalaAulasNormal(32, "Sala de Aulas normal"), Videoconferencia(33, "videoconferência"), Atrio(34, "Átrio");
 
-	private final int index;
+	private int index;    // Estes valores são os default, podendo variar para cada constante consuante o mapeamento
 	private final String columnName;
-	private static FileToTable classroomsFileToTable = new FileToTable(new File("CaracterizaçãoDasSalas.csv"), null); // Ficheiro das salas
+	private static FileToTable classroomsFileToTable = new FileToTable(new File("CaracterizaçãoDasSalas.csv")); // Ficheiro das salas
 
 	ColunasSalas(int index, String columnName) {
 		this.index = index;
@@ -51,17 +49,12 @@ public enum ColunasSalas {
 		return columnName;
 	}
 
-	public static FileToTable getClassroomsFileToTable() {
-		return classroomsFileToTable;
-	}
-	
 	/**
 	 * Gets the enum constant associated with the specified column name.
 	 *
 	 * @param columnName The name of the column.
 	 * @return The enum constant associated with the specified column name.
-	 * @throws IllegalArgumentException if no enum constant is found with the
-	 *                                  specified column name.
+	 * @throws IllegalArgumentException if no enum constant is found with the specified column name.
 	 */
 	public static ColunasSalas getConstant(String columnName) {
 		for (ColunasSalas coluna : values()) {
@@ -85,7 +78,7 @@ public enum ColunasSalas {
 		}
 		return columnsList;
 	}
-	
+
 	/**
 	 * Gets a list of values (names) of all enum constants.
 	 *
@@ -101,50 +94,73 @@ public enum ColunasSalas {
 		return columnsList;
 	}
 
-	public static boolean columnDataType(ColunasSalas column) {
-		if (column.equals(ColunasSalas.CapacidadeNormal) || column.equals(ColunasSalas.CapacidadeExame) 
-				|| column.equals(ColunasSalas.NumCaracteristicas))
-			return true;
-		return false;
-	} 
+	/**
+	 * Gets the file-to-table instance for classrooms.
+	 *
+	 * @return The file-to-table instance for classrooms.
+	 */
+	public static FileToTable getClassroomsFileToTable() {
+		return classroomsFileToTable;
+	}
 
 	/**
-	 * Gets information from the classrooms file based on a specified column and its corresponding field value, 
+	 * Checks if the specified column is a numeric column.
+	 *
+	 * @param column The column to check.
+	 * @return {@code true} if the column represents numeric data, {@code false} otherwise.
+	 */
+	public static boolean isColumnOfNumbers(ColunasSalas column) {
+		return column.equals(ColunasSalas.CapacidadeNormal) || column.equals(ColunasSalas.CapacidadeExame) 
+				|| column.equals(ColunasSalas.NumCaracteristicas);
+	}
+
+	/**
+	 * Checks if the specified column represents characteristics.
+	 *
+	 * @param column The column to check.
+	 * @return {@code true} if the column represents characteristics, {@code false} otherwise.
+	 */
+	public static boolean isColumnOfCharactheristics(ColunasSalas column) {
+		return column.index >= 5;
+	}
+
+	/**
+	 * Gets information from the classrooms file based on a specified column and its corresponding field value,
 	 * in the form of a Map of file lines.
 	 * 
 	 * @param classroomsColumn Column to be used for filtering the file.
-	 * @param fieldValue Value of the field to be matched with. 
+	 * @param fieldValue Value of the field to be matched with.
 	 * @return The Map that contains lines of the classrooms file.
 	 */
-	public static Map<Integer, ArrayList<String>> getClassroomInfo(ColunasSalas classroomsColumn, String fieldValue) {
-		Map<Integer, ArrayList<String>> classroomInfo = new HashMap<>();
-		Map<Integer, ArrayList<String>> classroomsFileMap = classroomsFileToTable.readCSV();
-
-		int mapIndex = 0;
-		for (Map.Entry<Integer, ArrayList<String>> fileLine : classroomsFileMap.entrySet()) {
-			if (fileLine.getValue().get(classroomsColumn.index).equals(fieldValue)) {
-				classroomInfo.put(mapIndex, fileLine.getValue()); // Lista que contem a linha da sala no ficheiro
-				mapIndex++;
-			}
-		}
-		return classroomInfo;
-	}
+	//    public static Map<Integer, ArrayList<String>> getClassroomInfo(ColunasSalas classroomsColumn, String fieldValue) {
+	//        Map<Integer, ArrayList<String>> classroomInfo = new HashMap<>();
+	//        Map<Integer, ArrayList<String>> classroomsFileMap = classroomsFileToTable.readCSV();
+	//
+	//        int mapIndex = 0;
+	//        for (Map.Entry<Integer, ArrayList<String>> fileLine : classroomsFileMap.entrySet()) {
+	//            if (fileLine.getValue().get(classroomsColumn.index).equals(fieldValue)) {
+	//                classroomInfo.put(mapIndex, fileLine.getValue()); // Lista que contem a linha da sala no ficheiro
+	//                mapIndex++;
+	//            }
+	//        }
+	//        return classroomInfo;
+	//    }
 
 	/**
 	 * Gets a List of strings representing the column value of a given Map.
 	 *
 	 * @param classroomInfo Map that can contain multiple lines of the classrooms file. Should be the return of 
-	 * 		  a call of the method {@link ColunasSalas#getClassroomInfo(ColunasSalas, String)}
+	 *        a call of the method {@link ColunasSalas#getClassroomInfo(ColunasSalas, String)}
 	 * @param columnValue   {@code ColunasSalas} that contains the index of the column value in the given list.
 	 * @return The List of strings representing the column value of the given Map.
 	 * 
 	 */
-	public static List<String> getColumnValue(Map<Integer, ArrayList<String>> classroomInfo, ColunasSalas columnValue) {
-		List<String> list = new ArrayList<>();
-
-		for (Entry<Integer, ArrayList<String>> fileLine : classroomInfo.entrySet()) {
-			list.add(fileLine.getKey(), fileLine.getValue().get(columnValue.index)); // Lista que contem a linha da sala no ficheiro
-		}
-		return list;
-	}
+	//    public static List<String> getColumnValue(Map<Integer, ArrayList<String>> classroomInfo, ColunasSalas columnValue) {
+	//        List<String> list = new ArrayList<>();
+	//
+	//        for (Entry<Integer, ArrayList<String>> fileLine : classroomInfo.entrySet()) {
+	//            list.add(fileLine.getKey(), fileLine.getValue().get(columnValue.index)); // Lista que contem a linha da sala no ficheiro
+	//        }
+	//        return list;
+	//    }
 }
