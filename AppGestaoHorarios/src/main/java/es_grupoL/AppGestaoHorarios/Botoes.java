@@ -166,7 +166,7 @@ public class Botoes extends JFrame {
 
 				if (filePath != null && !filePath.isBlank()) {
 					File file = new File(filePath);
-					userFileToTable = new FileToTable(file);
+					userFileToTable = new FileToTable(file, ca);
 					userFileMap = userFileToTable.readCSV();
 					CancellingButton.setVisible(true);
 
@@ -353,40 +353,16 @@ public class Botoes extends JFrame {
 		fi.deleteOnExit(); // Apagar ficheiro temporário
 	}
 
-	/**
-	 * Returns the user file map.
-	 *
-	 * @return The user file map.
-	 */
 	public Map<Integer, ArrayList<String>> getUserFileMap() {
 		return this.userFileMap;
 	}
 
-	/**
-	 * Returns the mapped columns in order.
-	 *
-	 * @return The mapped columns in order.
-	 */
 	public List<String> getMappedColumnsInOrder() {
 		return mappedColumnsInOrder;
 	}
 
-	/**
-	 * Returns the user file to table.
-	 *
-	 * @return The user file to table.
-	 */
 	public FileToTable getUserFileToTable() {
 		return userFileToTable;
-	}
-
-	/**
-	 * Returns the application configuration.
-	 *
-	 * @return The application configuration.
-	 */
-	public ConfigApp getConfiguracao_aplicacao() {
-		return configuracao_aplicacao;
 	}
 
 	/**
